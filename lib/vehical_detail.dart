@@ -29,6 +29,7 @@ class _vehicalDtailState extends State<vehicalDtail> {
   final cityTextEditingController = TextEditingController();
   final colonyTextEditingController = TextEditingController();
   final databaseRef = FirebaseDatabase.instance.ref('user').child(currentUser!.uid);
+  final publicRef = FirebaseDatabase.instance.ref('public');
 
 
   final _formkey =GlobalKey<FormState>();
@@ -45,10 +46,11 @@ class _vehicalDtailState extends State<vehicalDtail> {
             "colony": colonyTextEditingController.text.trim(),
           };
           databaseRef.child('vehicaldetail').child(DateTime.now().millisecond.toString()).set(vehicalMap);
+          publicRef.child(DateTime.now().millisecond.toString()).set(vehicalMap);
 
         }
         await Fluttertoast.showToast(msg: "succcessfully enterd");
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (Context) => Admin()));
       }
       else {

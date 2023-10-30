@@ -1,5 +1,6 @@
 
 
+import 'package:bike_rental/Assistant_method.dart';
 import 'package:bike_rental/Mainscreen.dart';
 import 'package:bike_rental/signup.dart';
 import 'package:email_validator/email_validator.dart';
@@ -26,8 +27,9 @@ class _logInState extends State<logIn> {
   void _submit()async{
     if(_formkey.currentState!.validate()) {
       await firebaseAuth.signInWithEmailAndPassword(email: emailTextEditingController.text, password: passwordTextEditingController.text).then((auth) async {
+      currentUser = auth.user;
         await Fluttertoast.showToast(msg: "succcessfully Login");
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (Context) => mainScreen()));
       }).catchError((errorMessage) {
         Fluttertoast.showToast(msg: "Error occured: \n $errorMessage");

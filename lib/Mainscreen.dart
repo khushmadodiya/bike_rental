@@ -25,7 +25,10 @@ class _mainScreenState extends State<mainScreen> {
   Future<void> signOut() async {
     try {
       await FirebaseAuth.instance.signOut();
+      currentUser = null;
+      print(currentUser);
       Fluttertoast.showToast(msg: "Successfully signed out");
+
 
       // Successfully signed out
     } catch (e) {
@@ -38,6 +41,8 @@ class _mainScreenState extends State<mainScreen> {
   @override
   Widget build(BuildContext context) {
     bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    DatabaseReference locRef = FirebaseDatabase.instance.ref()
+        .child('user').child(currentUser!.uid).child('location');
     return Scaffold(
       appBar: AppBar(title: Text('Select Role'),backgroundColor: darkTheme?Colors.amber.shade400 : Colors.blue,
       actions: [
@@ -63,16 +68,16 @@ class _mainScreenState extends State<mainScreen> {
                   firebaseAuth.currentUser !=null ? AssistantMethod.readCurrenOnlinUserInfo() : null;
                   locRef.once().then((snap) {
                     if (snap.snapshot.value != null) {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>userScreen()));
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>userScreen()));
                     }
                     else{
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Location()));
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Location()));
                     }
                   });
 
                 }
                 else{
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Location()));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Location()));
                 }
               },
               child: Container(
@@ -96,7 +101,10 @@ class _mainScreenState extends State<mainScreen> {
                       .child('user').child(currentUser!.uid).child('vehicaldetail');
                   dataRef.once().then((snap) {
                     if (snap.snapshot.value != null) {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Admin()));
+                      
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Admin()));
+                   
+
                     }
                     else{
                       Navigator.push(context, MaterialPageRoute(builder: (context)=>vehicalDtail()));

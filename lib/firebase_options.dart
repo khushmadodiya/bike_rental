@@ -44,7 +44,7 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCXXEk4Mj4n--0rrr_r5z7Nf66Rf3PwA88',
+    apiKey: 'AIzaSyBJBr-UiLZLwxqfQJnCeZx97EgVcjtc2lM',
     appId: '1:733436829123:web:c302312055d669e0e7f176',
     messagingSenderId: '733436829123',
     projectId: 'bike-rental-54725',

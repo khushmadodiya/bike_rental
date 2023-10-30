@@ -31,8 +31,11 @@ class _LocationState extends State<Location> {
           };
           databaseRef.child('location').set(locMap);
         }
+        city = cityTextEditingController.text.trim();
+        print(city!);
+        state = stateTextEditingController.text.trim();
         await Fluttertoast.showToast(msg: "succcessfully enterd");
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (Context) => userScreen()));
       }
       else {

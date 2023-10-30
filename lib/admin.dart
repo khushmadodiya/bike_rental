@@ -13,6 +13,8 @@ class Admin extends StatefulWidget {
 }
 
 class _AdminState extends State<Admin> {
+  DatabaseReference vehicalRef = FirebaseDatabase.instance.ref()
+      .child('user').child(currentUser!.uid).child('vehicaldetail');
   @override
   Widget build(BuildContext context) {
     bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
@@ -21,9 +23,13 @@ class _AdminState extends State<Admin> {
             title: Text('Vehical details'),
             backgroundColor: darkTheme?Colors.amber.shade400 : Colors.blue,
             actions: [
+              IconButton(onPressed: ()async{
+                print(currentUser!.uid);
+                await Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Admin()));
+              }, icon: Icon(Icons.refresh_outlined,size: 40,)),
               IconButton(onPressed: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context)=>vehicalDtail()));
-                 }, icon: Icon(Icons.add,size: 50,))
+                 }, icon: Icon(Icons.add,size: 40,))
             ],
           ),
       backgroundColor: darkTheme ? Colors.grey.shade800: Colors.white,
@@ -46,7 +52,7 @@ class _AdminState extends State<Admin> {
                         ),
                         child: ListTile(
                             title: Text(snapshot.child('vehicalname').value.toString(),style: TextStyle(fontSize: 25),),
-                            subtitle: Text('''${snapshot.child('colony').value.toString()} ${snapshot.child('city').value.toString()}''',style: TextStyle(fontSize: 20),),
+                            subtitle: Text('''${snapshot.child('colony').value.toString()}, ${snapshot.child('city').value.toString()}''',style: TextStyle(fontSize: 20),),
                         ),
                       ),
                       SizedBox(height: 10,)
