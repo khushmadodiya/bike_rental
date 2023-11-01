@@ -28,7 +28,7 @@ class _vehicalDtailState extends State<vehicalDtail> {
   final stateTextEditingController = TextEditingController();
   final cityTextEditingController = TextEditingController();
   final colonyTextEditingController = TextEditingController();
-  final databaseRef = FirebaseDatabase.instance.ref('user').child(currentUser!.uid);
+  final databaseRef = FirebaseDatabase.instance.ref('admin').child(currentUser!.uid);
   final publicRef = FirebaseDatabase.instance.ref('public');
 
 
@@ -45,8 +45,17 @@ class _vehicalDtailState extends State<vehicalDtail> {
             "city": cityTextEditingController.text.trim(),
             "colony": colonyTextEditingController.text.trim(),
           };
+          Map publiclMap = {
+            "id": currentUser!.uid,
+            "vehicalname": vehicalnameTextEditingController.text.trim(),
+            "vehicaltype": vehicaltypeTextEditingController.text.trim(),
+            "vehicalnumber": vehicalnumberTextEditingController.text.trim(),
+            "state": stateTextEditingController.text.trim(),
+            "city": cityTextEditingController.text.trim(),
+            "colony": colonyTextEditingController.text.trim(),
+          };
           databaseRef.child('vehicaldetail').child(DateTime.now().millisecond.toString()).set(vehicalMap);
-          publicRef.child(DateTime.now().millisecond.toString()).set(vehicalMap);
+          publicRef.child(DateTime.now().millisecond.toString()).set(publiclMap);
 
         }
         await Fluttertoast.showToast(msg: "succcessfully enterd");
@@ -68,7 +77,7 @@ class _vehicalDtailState extends State<vehicalDtail> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        backgroundColor: darkTheme ? Colors.grey.shade800: Colors.white,
+        backgroundColor: darkTheme ? Colors.black87: Colors.white,
         body: ListView(
           padding: EdgeInsets.all(10),
           children: [
@@ -78,7 +87,7 @@ class _vehicalDtailState extends State<vehicalDtail> {
             Center(
               child: Text("Vehical Detail",
                 style: TextStyle(
-                  color: darkTheme ? Colors.amber.shade300 : Colors.blue,
+                  color: darkTheme ? Colors.amber.shade400 : Colors.blue,
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
                 ),
@@ -101,7 +110,10 @@ class _vehicalDtailState extends State<vehicalDtail> {
                           ],
                           decoration: InputDecoration(
                             hintText: "Vehical Name",
-
+                            hintStyle: TextStyle(
+                                color: Colors.grey.shade800,
+                                fontSize: 20
+                            ),
                             filled: true,
                             fillColor: darkTheme ? Colors.white54 : Colors.black12,
                             border: OutlineInputBorder(
@@ -136,6 +148,7 @@ class _vehicalDtailState extends State<vehicalDtail> {
                           ],
                           decoration: InputDecoration(
                             hintText: "Vehical type(car or bike)",
+
                             hintStyle: TextStyle(
                                 color: Colors.grey.shade800,
                                 fontSize: 20
@@ -162,6 +175,7 @@ class _vehicalDtailState extends State<vehicalDtail> {
                             if(text.length>49){
                               return 'Vehical type can\'t be greater than 50';
                             }
+
 
                           },
                           onChanged: (text)=>setState(() {

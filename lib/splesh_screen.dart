@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bike_rental/Mainscreen.dart';
+import 'package:bike_rental/User_ainscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +20,7 @@ class _spleshState extends State<splesh> {
     Timer(Duration(seconds: 3), () async{
       if(await firebaseAuth.currentUser != null){
         firebaseAuth.currentUser !=null ? AssistantMethod.readCurrenOnlinUserInfo() : null;
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>mainScreen()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>userMainScreen()));
       }
       else{
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>logIn()));
@@ -35,7 +35,7 @@ class _spleshState extends State<splesh> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(child: Text("Bike Rental",style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),)),
+      body: Center(child: Text("VeloRental",style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),)),
     );
   }
 }

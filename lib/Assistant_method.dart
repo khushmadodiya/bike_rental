@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'Model.dart';
 import 'globle.dart';
 
+
 class AssistantMethod {
   static void readCurrenOnlinUserInfo() async {
     currentUser = firebaseAuth.currentUser;

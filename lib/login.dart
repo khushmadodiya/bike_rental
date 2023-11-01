@@ -1,7 +1,7 @@
 
 
 import 'package:bike_rental/Assistant_method.dart';
-import 'package:bike_rental/Mainscreen.dart';
+import 'package:bike_rental/User_ainscreen.dart';
 import 'package:bike_rental/signup.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
+import 'Admin_mainscreen.dart';
 import 'globle.dart';
 
 class logIn extends StatefulWidget{
@@ -22,6 +23,7 @@ class _logInState extends State<logIn> {
   final emailTextEditingController = TextEditingController();
   final passwordTextEditingController = TextEditingController();
   bool _passwordvisibal =false;
+  bool isuser = true;
 
   final _formkey =GlobalKey<FormState>();
   void _submit()async{
@@ -29,8 +31,10 @@ class _logInState extends State<logIn> {
       await firebaseAuth.signInWithEmailAndPassword(email: emailTextEditingController.text, password: passwordTextEditingController.text).then((auth) async {
       currentUser = auth.user;
         await Fluttertoast.showToast(msg: "succcessfully Login");
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (Context) => mainScreen()));
+        isuser ? await Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (Context) => userMainScreen())):
+       await Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (Context) => adminMainScreen()));
       }).catchError((errorMessage) {
         Fluttertoast.showToast(msg: "Error occured: \n $errorMessage");
         print(errorMessage);
@@ -42,6 +46,7 @@ class _logInState extends State<logIn> {
 
   }
 
+
   @override
   Widget build(BuildContext context) {
     bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
@@ -50,6 +55,7 @@ class _logInState extends State<logIn> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
+        backgroundColor: darkTheme ? Colors.black87 : Colors.white,
         body: ListView(
           padding: EdgeInsets.all(10),
           children: [
@@ -88,7 +94,7 @@ class _logInState extends State<logIn> {
                                 fontSize: 20
                             ),
                             filled: true,
-                            fillColor: darkTheme ? Colors.black26 : Colors.black12,
+                            fillColor: darkTheme ? Colors.white54  : Colors.black12,
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
@@ -133,7 +139,7 @@ class _logInState extends State<logIn> {
 
                             ),
                             filled: true,
-                            fillColor: darkTheme ? Colors.black26 : Colors.black12,
+                            fillColor: darkTheme ? Colors.white54  : Colors.black12,
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
@@ -183,8 +189,28 @@ class _logInState extends State<logIn> {
 
                           ),
                           onPressed: (){
+                            isuser = true;
                             _submit();
-                          }, child: Text("LogIn"),
+                          }, child: Text("LogIn as User"),
+
+
+                        ),
+                        SizedBox(height: 20,),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                              onPrimary: darkTheme ? Colors.black : Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+
+                              ),
+                              minimumSize: Size(double.infinity, 50)
+
+                          ),
+                          onPressed: (){
+                            isuser = false;
+                            _submit();
+                          }, child: Text("LogIn as Admin"),
 
 
                         ),

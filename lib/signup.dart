@@ -27,6 +27,7 @@ class _registerState extends State<register> {
   final passwordTextEditingController = TextEditingController();
   final conformPasswordTextEditingController = TextEditingController();
   bool _passwordvisibal =false;
+  bool isuser = true;
 
   final _formkey =GlobalKey<FormState>();
   void _submit()async{
@@ -46,7 +47,8 @@ class _registerState extends State<register> {
             "password": passwordTextEditingController.text.trim(),
           };
           DatabaseReference userRef = FirebaseDatabase.instance.ref().child('user');
-          userRef.child(currentUser!.uid).set(userMap);
+          DatabaseReference adminRef = FirebaseDatabase.instance.ref().child('admin');
+          isuser ? userRef.child(currentUser!.uid).set(userMap) : adminRef.child(currentUser!.uid).set(userMap);
         }
         await Fluttertoast.showToast(msg: "succcessfully Register");
         Navigator.push(
@@ -62,6 +64,8 @@ class _registerState extends State<register> {
 
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
@@ -70,6 +74,8 @@ class _registerState extends State<register> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
+        backgroundColor: darkTheme ? Colors.black87 : Colors.white,
+
         body: ListView(
           padding: EdgeInsets.all(10),
           children: [
@@ -102,9 +108,12 @@ class _registerState extends State<register> {
                           ],
                           decoration: InputDecoration(
                             hintText: "Name",
-
+                            hintStyle: TextStyle(
+                                color: Colors.grey.shade800,
+                                fontSize: 20
+                            ),
                             filled: true,
-                            fillColor: darkTheme ? Colors.black26 : Colors.black12,
+                            fillColor: darkTheme ? Colors.white54 : Colors.black12,
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
@@ -142,7 +151,7 @@ class _registerState extends State<register> {
                                 fontSize: 20
                             ),
                             filled: true,
-                            fillColor: darkTheme ? Colors.black26 : Colors.black12,
+                            fillColor: darkTheme ? Colors.white54  : Colors.black12,
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
@@ -183,7 +192,7 @@ class _registerState extends State<register> {
                                 fontSize: 20
                             ),
                             filled: true,
-                            fillColor: darkTheme ? Colors.black26 : Colors.black12,
+                            fillColor: darkTheme ? Colors.white54  : Colors.black12,
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
@@ -210,7 +219,7 @@ class _registerState extends State<register> {
                                 fontSize: 20
                             ),
                             filled: true,
-                            fillColor: darkTheme ? Colors.black26 : Colors.black12,
+                            fillColor: darkTheme ? Colors.white54  : Colors.black12,
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
@@ -251,7 +260,7 @@ class _registerState extends State<register> {
 
                             ),
                             filled: true,
-                            fillColor: darkTheme ? Colors.black26 : Colors.black12,
+                            fillColor: darkTheme ? Colors.white54  : Colors.black12,
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
@@ -302,7 +311,7 @@ class _registerState extends State<register> {
 
                             ),
                             filled: true,
-                            fillColor: darkTheme ? Colors.black26 : Colors.black12,
+                            fillColor: darkTheme ? Colors.white54  : Colors.black12,
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
@@ -355,8 +364,29 @@ class _registerState extends State<register> {
 
                           ),
                           onPressed: (){
+                            isuser = true;
                             _submit();
-                          }, child: Text("Register"),
+                          }, child: Text("Register As User"),
+
+
+                        ),
+
+                        SizedBox(height: 20,),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: darkTheme ? Colors.amber.shade400 : Colors.blue,
+                              onPrimary: darkTheme ? Colors.black : Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+
+                              ),
+                              minimumSize: Size(double.infinity, 50)
+
+                          ),
+                          onPressed: (){
+                            isuser = false;
+                            _submit();
+                          }, child: Text("Resister As Admin"),
 
 
                         ),

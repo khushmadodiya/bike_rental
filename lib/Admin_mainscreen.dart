@@ -13,14 +13,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'Assistant_method.dart';
 import 'globle.dart';
 
-class mainScreen extends StatefulWidget {
-  const mainScreen({super.key});
+class adminMainScreen extends StatefulWidget {
+  const adminMainScreen({super.key});
 
   @override
-  State<mainScreen> createState() => _mainScreenState();
+  State<adminMainScreen> createState() => _adminMainScreenState();
 }
 
-class _mainScreenState extends State<mainScreen> {
+class _adminMainScreenState extends State<adminMainScreen> {
 
   Future<void> signOut() async {
     try {
@@ -45,55 +45,26 @@ class _mainScreenState extends State<mainScreen> {
         .child('user').child(currentUser!.uid).child('location');
     return Scaffold(
       appBar: AppBar(title: Text('Select Role'),backgroundColor: darkTheme?Colors.amber.shade400 : Colors.blue,
-      actions: [
-        IconButton(onPressed: ()async{
-          await signOut();
-        }, icon: Icon(Icons.logout_outlined)),
-        IconButton(onPressed: ()async{
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>logIn()));
-        }, icon: Icon(Icons.login_outlined)),
-        IconButton(onPressed: ()async{
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MyApp()));
-        }, icon: Icon(Icons.refresh_outlined))
-      ],
+        actions: [
+          IconButton(onPressed: ()async{
+            await signOut();
+          }, icon: Icon(Icons.logout_outlined)),
+          IconButton(onPressed: ()async{
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>logIn()));
+          }, icon: Icon(Icons.login_outlined)),
+          IconButton(onPressed: ()async{
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MyApp()));
+          }, icon: Icon(Icons.refresh_outlined))
+        ],
       ),
-      backgroundColor: darkTheme ? Colors.grey.shade800: Colors.white,
+      backgroundColor: darkTheme ? Colors.black87: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            GestureDetector(
-              onTap: () async {
-                if(firebaseAuth.currentUser != null){
-                  firebaseAuth.currentUser !=null ? AssistantMethod.readCurrenOnlinUserInfo() : null;
-                  locRef.once().then((snap) {
-                    if (snap.snapshot.value != null) {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>userScreen()));
-                    }
-                    else{
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Location()));
-                    }
-                  });
 
-                }
-                else{
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Location()));
-                }
-              },
-              child: Container(
-
-                height: 40,
-                width: 200,
-                decoration: BoxDecoration(
-                  color: darkTheme?Colors.amber.shade400 : Colors.blue,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Center(child: Text("User",style: TextStyle(fontSize: 20),)),
-              ),
-
-            ),
             SizedBox(height: 20,),
-            GestureDetector(
+            InkWell(
               onTap: () async {
                 if(await firebaseAuth.currentUser != null){
                   firebaseAuth.currentUser !=null ? AssistantMethod.readCurrenOnlinUserInfo() : null;
@@ -101,9 +72,9 @@ class _mainScreenState extends State<mainScreen> {
                       .child('user').child(currentUser!.uid).child('vehicaldetail');
                   dataRef.once().then((snap) {
                     if (snap.snapshot.value != null) {
-                      
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Admin()));
-                   
+
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Admin()));
+
 
                     }
                     else{
@@ -121,8 +92,8 @@ class _mainScreenState extends State<mainScreen> {
                 height: 40,
                 width: 200,
                 decoration: BoxDecoration(
-                   color: darkTheme?Colors.amber.shade400 : Colors.blue,
-                    borderRadius: BorderRadius.circular(20),
+                  color: darkTheme?Colors.amber.shade400 : Colors.blue,
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: Center(child: Text("Admin",style: TextStyle(fontSize: 20),)),
 

@@ -13,8 +13,9 @@ class Admin extends StatefulWidget {
 }
 
 class _AdminState extends State<Admin> {
+  static bool flag = true;
   DatabaseReference vehicalRef = FirebaseDatabase.instance.ref()
-      .child('user').child(currentUser!.uid).child('vehicaldetail');
+      .child('admin').child(currentUser!.uid).child('vehicaldetail');
   @override
   Widget build(BuildContext context) {
     bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
@@ -27,45 +28,63 @@ class _AdminState extends State<Admin> {
                 print(currentUser!.uid);
                 await Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Admin()));
               }, icon: Icon(Icons.refresh_outlined,size: 40,)),
-              IconButton(onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>vehicalDtail()));
-                 }, icon: Icon(Icons.add,size: 40,))
+
             ],
           ),
-      backgroundColor: darkTheme ? Colors.grey.shade800: Colors.white,
+      backgroundColor: darkTheme ? Colors.black87: Colors.white,
       body: Column(
         children: [
           Expanded(
               child: FirebaseAnimatedList(
                 query:vehicalRef,
                 itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
-                  return Column(
-                    children: [
-                      SizedBox(height: 20,),
-                      Container(
-                        height: 100,
+                  return GestureDetector(
+                    onVerticalDragUpdate: (flag){
+                      setState(() {
+                          FloatingActionButton(onPressed: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>vehicalDtail()));
 
-                        decoration: BoxDecoration(
-                          color: Colors.blue.shade200,
-                          borderRadius: BorderRadius.circular(10)
+                        },
+                          child: Icon(Icons.add),
+                        );
+                      });
 
+                    },
+                    child: Column(
+                      children: [
+                        SizedBox(height: 20,),
+                        Container(
+                          height: 100,
+
+                          decoration: BoxDecoration(
+                            color: darkTheme ? Colors.grey.shade800 : Colors.blue.shade200,
+                            borderRadius: BorderRadius.circular(10)
+
+                          ),
+                          child: ListTile(
+                              title: Text(snapshot.child('vehicalname').value.toString(),style: TextStyle(fontSize: 25,color: darkTheme?Colors.white:Colors.black),),
+                              subtitle: Text('''${snapshot.child('colony').value.toString()}, ${snapshot.child('city').value.toString()}''',style: TextStyle(fontSize: 20,color: darkTheme?Colors.white:Colors.black),),
+                          ),
                         ),
-                        child: ListTile(
-                            title: Text(snapshot.child('vehicalname').value.toString(),style: TextStyle(fontSize: 25),),
-                            subtitle: Text('''${snapshot.child('colony').value.toString()}, ${snapshot.child('city').value.toString()}''',style: TextStyle(fontSize: 20),),
-                        ),
-                      ),
-                      SizedBox(height: 10,)
-                    ],
+                        SizedBox(height: 10,),
+                      ],
+                    ),
                   );
                 },
 
 
               )
-          )
+          ),
+
         ],
       ),
+      floatingActionButton:  FloatingActionButton(onPressed: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>vehicalDtail()));
 
+      },
+        child: Icon(Icons.add),
+        backgroundColor: darkTheme ? Colors.amber.shade400 : Colors.blue.shade200,
+      ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:bike_rental/user_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,8 +17,9 @@ class Location extends StatefulWidget {
 
 class _LocationState extends State<Location> {
 
-  final cityTextEditingController = TextEditingController();
+  final  cityTextEditingController = TextEditingController();
   final stateTextEditingController = TextEditingController();
+
   final databaseRef = FirebaseDatabase.instance.ref('user').child(currentUser!.uid);
 
   final _formkey =GlobalKey<FormState>();
@@ -48,17 +50,18 @@ class _LocationState extends State<Location> {
   @override
   Widget build(BuildContext context) {
     bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    DatabaseReference pRef = FirebaseDatabase.instance.ref('public');
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        backgroundColor: darkTheme ? Colors.grey.shade800: Colors.white,
+        backgroundColor: darkTheme ? Colors.black87: Colors.white,
         body: ListView(
           padding: EdgeInsets.all(10),
           children: [
             SizedBox(
-              height: 100,
+              height: 50,
             ),
             Center(
               child: Text("your Location",
@@ -70,7 +73,7 @@ class _LocationState extends State<Location> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(40,30,40,50),
+              padding: const EdgeInsets.fromLTRB(40,20,40,40),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -80,13 +83,55 @@ class _LocationState extends State<Location> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        Container(height: 150,width: 250,
+                           decoration: BoxDecoration(
+                             color: darkTheme ? Colors.grey.shade400:Colors.blue.shade100,
+                             borderRadius: BorderRadius.circular(20)
+                           ),
+
+                            child: FirebaseAnimatedList(
+                              query:pRef,
+                              itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
+                                final title = Text(snapshot.child('city').value.toString());
+                                if(cityTextEditingController.text.isEmpty){
+                                  print(title);
+                                  return Container();
+                                }
+                                else if(title.toString().contains(cityTextEditingController.text.toLowerCase().toLowerCase())){
+                                 return InkWell(
+                                   child: ListTile(
+                                            title: Text(snapshot.child('city').value.toString(),style: TextStyle(fontSize: 20),),
+                                     subtitle: Text('''${snapshot.child('colony').value.toString()}, ${snapshot.child('city').value.toString()}''',style: TextStyle(fontSize: 20),),
+
+                                   ),
+                                   onTap: (){
+                                     setState(() {
+                                       cityTextEditingController.text = snapshot.child('city').value.toString();
+                                       stateTextEditingController.text=snapshot.child('state').value.toString();
+                                     });
+
+                                   },
+                                 );
+
+
+                                }
+                                else{
+                                  Container(child: Text('else'),);
+                                }
+                                return Container();
+                              },
+
+
+                            )
+                        ),
+                        SizedBox(height: 10,),
                         TextFormField(
+                          controller: cityTextEditingController,
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(50)
                           ],
                           decoration: InputDecoration(
                             hintText: "City",
-
                             filled: true,
                             fillColor: darkTheme ? Colors.white54 : Colors.black12,
                             border: OutlineInputBorder(
@@ -101,21 +146,23 @@ class _LocationState extends State<Location> {
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (text){
                             if(text==null || text.isEmpty){
-                              return 'Name can\'t be empty';
+                              return 'city can\'t be empty';
                             }
                             if(text.length<2){
-                              return 'Please Enter a valid Name';
+                              return 'city Enter a valid Name';
                             }
                             if(text.length>49){
-                              return 'Name can\'t be greater than 50';
+                              return 'city can\'t be greater than 50';
                             }
                           },
                           onChanged: (text)=>setState(() {
                             cityTextEditingController.text =text;
                           }),
                         ),
+
                         SizedBox(height: 15,),
                         TextFormField(
+                          controller: stateTextEditingController,
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(50)
                           ],
@@ -142,7 +189,7 @@ class _LocationState extends State<Location> {
                               return 'state can\'t be empty';
                             }
                             if(text.length<2){
-                              return 'Please Enter a valid state';
+                              return 'state Enter a valid state';
                             }
                             if(text.length>49){
                               return 'state can\'t be greater than 50';
