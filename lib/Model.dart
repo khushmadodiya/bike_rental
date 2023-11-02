@@ -5,12 +5,14 @@ class UserModel{
   String? id;
   String? email;
   String? address;
+  String? isadmin;
   UserModel({
     this.phone,
     this.name,
     this.email,
     this.id,
     this.address,
+    this.isadmin,
   });
   UserModel.fromSnapshot(DataSnapshot snap){
     phone = (snap.value as dynamic)['phone'];
@@ -18,5 +20,6 @@ class UserModel{
     id = snap.key;
     email = (snap.value as dynamic)['email'];
     address = (snap.value as dynamic)['address'];
+    isadmin = (snap.value as dynamic)['isadmin'];
   }
 }

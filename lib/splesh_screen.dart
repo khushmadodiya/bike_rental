@@ -1,6 +1,7 @@
 import 'dart:async';
-
-import 'package:bike_rental/User_ainscreen.dart';
+import 'package:bike_rental/mainScreen.dart';
+import 'package:bike_rental/admin.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,15 @@ class _spleshState extends State<splesh> {
     Timer(Duration(seconds: 3), () async{
       if(await firebaseAuth.currentUser != null){
         firebaseAuth.currentUser !=null ? AssistantMethod.readCurrenOnlinUserInfo() : null;
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>userMainScreen()));
+        DatabaseReference userRef = FirebaseDatabase.instance.ref()
+            .child('user')
+            .child(currentUser!.uid);
+        userRef.once().then((snap) {
+
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>mainScreen()));
+        });
+
+
       }
       else{
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>logIn()));

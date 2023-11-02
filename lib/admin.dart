@@ -1,9 +1,13 @@
+import 'package:bike_rental/mainScreen.dart';
 import 'package:bike_rental/globle.dart';
+import 'package:bike_rental/login.dart';
 import 'package:bike_rental/vehical_detail.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Admin extends StatefulWidget {
   const Admin({super.key});
@@ -13,9 +17,24 @@ class Admin extends StatefulWidget {
 }
 
 class _AdminState extends State<Admin> {
-  static bool flag = true;
-  DatabaseReference vehicalRef = FirebaseDatabase.instance.ref()
-      .child('admin').child(currentUser!.uid).child('vehicaldetail');
+  DatabaseReference vehicalRef = FirebaseDatabase.instance.ref('user')
+      .child(currentUser!.uid).child('vehicaldetail');
+  Future<void> signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      await Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>mainScreen()));
+      currentUser = null;
+      print(currentUser);
+      Fluttertoast.showToast(msg: "Successfully signed out");
+
+
+      // Successfully signed out
+    } catch (e) {
+      // Handle errors, if any
+      print('Error signing out: $e');
+      Fluttertoast.showToast(msg: 'Error signing out: $e');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
@@ -24,6 +43,10 @@ class _AdminState extends State<Admin> {
             title: Text('Vehical details'),
             backgroundColor: darkTheme?Colors.amber.shade400 : Colors.blue,
             actions: [
+              IconButton(onPressed: ()async{
+
+                await signOut();
+              }, icon: Icon(Icons.logout_outlined)),
               IconButton(onPressed: ()async{
                 print(currentUser!.uid);
                 await Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Admin()));

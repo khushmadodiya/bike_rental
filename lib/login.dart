@@ -1,7 +1,7 @@
 
 
 import 'package:bike_rental/Assistant_method.dart';
-import 'package:bike_rental/User_ainscreen.dart';
+import 'package:bike_rental/mainScreen.dart';
 import 'package:bike_rental/signup.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -11,7 +11,6 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
-import 'Admin_mainscreen.dart';
 import 'globle.dart';
 
 class logIn extends StatefulWidget{
@@ -31,10 +30,8 @@ class _logInState extends State<logIn> {
       await firebaseAuth.signInWithEmailAndPassword(email: emailTextEditingController.text, password: passwordTextEditingController.text).then((auth) async {
       currentUser = auth.user;
         await Fluttertoast.showToast(msg: "succcessfully Login");
-        isuser ? await Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (Context) => userMainScreen())):
-       await Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (Context) => adminMainScreen()));
+         await Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (Context) => mainScreen()));
       }).catchError((errorMessage) {
         Fluttertoast.showToast(msg: "Error occured: \n $errorMessage");
         print(errorMessage);
@@ -189,28 +186,8 @@ class _logInState extends State<logIn> {
 
                           ),
                           onPressed: (){
-                            isuser = true;
                             _submit();
-                          }, child: Text("LogIn as User"),
-
-
-                        ),
-                        SizedBox(height: 20,),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              primary: darkTheme ? Colors.amber.shade400 : Colors.blue,
-                              onPrimary: darkTheme ? Colors.black : Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-
-                              ),
-                              minimumSize: Size(double.infinity, 50)
-
-                          ),
-                          onPressed: (){
-                            isuser = false;
-                            _submit();
-                          }, child: Text("LogIn as Admin"),
+                          }, child: Text("LogIn"),
 
 
                         ),

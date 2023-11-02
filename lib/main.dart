@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:bike_rental/BookingScreen.dart';
-import 'package:bike_rental/User_ainscreen.dart';
+import 'package:bike_rental/mainScreen.dart';
 import 'package:bike_rental/admin.dart';
 import 'package:bike_rental/signup.dart';
 import 'package:bike_rental/splesh_screen.dart';

@@ -27,7 +27,6 @@ class _registerState extends State<register> {
   final passwordTextEditingController = TextEditingController();
   final conformPasswordTextEditingController = TextEditingController();
   bool _passwordvisibal =false;
-  bool isuser = true;
 
   final _formkey =GlobalKey<FormState>();
   void _submit()async{
@@ -47,8 +46,8 @@ class _registerState extends State<register> {
             "password": passwordTextEditingController.text.trim(),
           };
           DatabaseReference userRef = FirebaseDatabase.instance.ref().child('user');
-          DatabaseReference adminRef = FirebaseDatabase.instance.ref().child('admin');
-          isuser ? userRef.child(currentUser!.uid).set(userMap) : adminRef.child(currentUser!.uid).set(userMap);
+
+          userRef.child(currentUser!.uid).set(userMap) ;
         }
         await Fluttertoast.showToast(msg: "succcessfully Register");
         Navigator.push(
@@ -364,29 +363,8 @@ class _registerState extends State<register> {
 
                           ),
                           onPressed: (){
-                            isuser = true;
                             _submit();
-                          }, child: Text("Register As User"),
-
-
-                        ),
-
-                        SizedBox(height: 20,),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              primary: darkTheme ? Colors.amber.shade400 : Colors.blue,
-                              onPrimary: darkTheme ? Colors.black : Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-
-                              ),
-                              minimumSize: Size(double.infinity, 50)
-
-                          ),
-                          onPressed: (){
-                            isuser = false;
-                            _submit();
-                          }, child: Text("Resister As Admin"),
+                          }, child: Text("Register"),
 
 
                         ),
