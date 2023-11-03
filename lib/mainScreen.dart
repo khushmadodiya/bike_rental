@@ -126,6 +126,7 @@ class _mainScreenState extends State<mainScreen> {
                       .child('vehicaldetail');
                   dataRef.once().then((snap) {
                     if (snap.snapshot.value != null) {
+
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => Admin()));
                     } else {

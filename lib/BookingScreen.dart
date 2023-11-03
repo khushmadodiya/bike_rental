@@ -1,11 +1,14 @@
+import 'package:bike_rental/Model.dart';
 import 'package:bike_rental/user_screen.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import 'bookedDetail.dart';
 import 'globle.dart';
 
 class bookingScreen extends StatefulWidget {
@@ -23,23 +26,41 @@ final returndateTextEditingController = TextEditingController();
   final paymodeTextEditingController = TextEditingController();
   List<String> typelist = ['Online Mode','Offline Mode'];
   String? selectedtype;
-final bookuseringRef = FirebaseDatabase.instance.ref('user').child(currentUser!.uid);
-final bookadminRef = FirebaseDatabase.instance.ref('user').child(currentUser!.uid);
 
+final bookuserRef = FirebaseDatabase.instance.ref('user').child(currentUser!.uid).child('booking_detail');
+final bookadminRef = FirebaseDatabase.instance.ref('user').child(adminuid!).child('vehicaldetail').child(admin_vehicalid!);
+final publicRef = FirebaseDatabase.instance.ref('public');
   final _formkey =GlobalKey<FormState>();
 void _submit()async{
   if(_formkey.currentState!.validate()) {
     if (await firebaseAuth.currentUser != null) {
       if (currentUser != null) {
-        Map vehicalMap = {
-          "vehicalname": pickdateTextEditingController.text.trim(),
-          "vehicaltype": returndateTextEditingController.text.trim(),
-          "vehicalnumber": timeTextEditingController.text.trim(),
-          "state": paymodeTextEditingController.text.trim(),
+            Map userMap = {
+              "pickdatupe": pickdateTextEditingController.text.trim(),
+              "returndate": returndateTextEditingController.text.trim(),
+              "pickuptime": timeTextEditingController.text.trim(),
+              "modeofpayment": paymodeTextEditingController.text.trim(),
 
-        };
-        bookadminRef.child('vehicaldetail').child(DateTime.now().millisecond.toString()).set(vehicalMap);
-        bookuseringRef.child(DateTime.now().millisecond.toString()).set(vehicalMap);
+            };
+            Map adminMap = {
+              "customerid": firebaseAuth.currentUser?.uid,
+              "customeremail": firebaseAuth.currentUser?.email,
+              "customerName": firebaseAuth.currentUser?.displayName,
+              "pickdatupe": pickdateTextEditingController.text.trim(),
+              "returndate": returndateTextEditingController.text.trim(),
+              "pickuptime": timeTextEditingController.text.trim(),
+              "modeofpayment": paymodeTextEditingController.text.trim(),
+
+            };
+
+            bookadminRef.child('user detail').child(DateTime
+                .now()
+                .millisecond
+                .toString()).set(adminMap);
+            bookuserRef.child(DateTime
+                .now()
+                .millisecond
+                .toString()).set(userMap);
 
       }
       await Fluttertoast.showToast(msg: "succcessfully enterd");
@@ -155,7 +176,7 @@ void _submit()async{
                                  firstDate: DateTime.now(),
                                  lastDate: DateTime(2050),
                              );
-                             var date = "${datepicker?.day} - ${datepicker?.month} - ${datepicker?.year}";
+                             String date = "${datepicker?.day} - ${datepicker?.month} - ${datepicker?.year}";
                              print(date);
                              returndateTextEditingController.text = date;
                           },
@@ -239,8 +260,9 @@ void _submit()async{
                               minimumSize: Size(double.infinity, 50)
 
                           ),
-                          onPressed: (){
-                            _submit();
+                          onPressed: ()async{
+                           _submit();
+
                           }, child: Text("Book Now"),
 
 

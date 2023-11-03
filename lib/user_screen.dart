@@ -1,9 +1,12 @@
 
+import 'dart:async';
+
 import 'package:bike_rental/select_loc.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'BookingScreen.dart';
 import 'globle.dart';
@@ -18,6 +21,7 @@ class userScreen extends StatefulWidget {
 
 class _userScreenState extends State<userScreen> {
   DatabaseReference publicRef = FirebaseDatabase.instance.ref('public');
+
 
 
   @override
@@ -54,24 +58,41 @@ class _userScreenState extends State<userScreen> {
 
                         ),
                         child: ListTile(
-                          title: Text(snapshot
-                              .child('vehicalname')
-                              .value
-                              .toString(), style: TextStyle(fontSize: 25,
+                          title: Text(snapshot.child('vehicalname').value.toString(), style: TextStyle(fontSize: 25,
                               color: darkTheme ? Colors.white : Colors.black),),
-                          subtitle: Text('''${snapshot
-                              .child('colony')
-                              .value
-                              .toString()}, ${snapshot
-                              .child('city')
-                              .value
-                              .toString()}''', style: TextStyle(fontSize: 20,
+                          subtitle: Text('''${snapshot.child('colony').value.toString()}, ${snapshot.child('city').value.toString()}''', style: TextStyle(fontSize: 20,
                               color: darkTheme ? Colors.white : Colors.black),),
                           trailing: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) => bookingScreen()));
-                            },
+                            onPressed: () async{
+                              DatabaseReference publicbtnRef = FirebaseDatabase.instance.ref('public');
+                           publicbtnRef.once().then((snap) {
+                              adminuid = snapshot.child('id').value.toString();
+                              admin_vehicalid = snapshot.child('vehicalnumber').value.toString();
+
+                              print(adminuid);
+                              print(admin_vehicalid);
+                           }).then((value) {
+                             DatabaseReference userRef = FirebaseDatabase.instance.ref('user').child(adminuid!).child('vehicaldetail').child(admin_vehicalid!);
+                             userRef.once().then((snap) {
+                               print(snapshot.child('status').value.toString());
+                               if (snapshot.child('status').value.toString() == "0") {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => bookingScreen()));
+                                     userRef.update(
+                                       {
+                                         'status': "1",
+                                       }).then((value) {
+                                     Fluttertoast.showToast(msg: 'Done');
+                                   });
+                                 }
+
+                               else{
+                                 Fluttertoast.showToast(msg: 'Already booked');
+                               }
+                             });
+                           });
+
+
+                           },
                             child: Text('Book Now'),
                           ),
                         ),

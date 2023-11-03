@@ -12,5 +12,8 @@ User? currentUser;
 UserModel? userModelCurrentinfo;
 String? city;
 String? state;
+String? adminuid;
+String? admin_vehicalid;
+
 
 

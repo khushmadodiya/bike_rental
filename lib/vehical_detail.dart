@@ -44,6 +44,7 @@ class _vehicalDtailState extends State<vehicalDtail> {
             "state": stateTextEditingController.text.trim(),
             "city": cityTextEditingController.text.trim(),
             "colony": colonyTextEditingController.text.trim(),
+            "status":"0",
           };
           Map publiclMap = {
             "id": currentUser!.uid,
@@ -53,8 +54,9 @@ class _vehicalDtailState extends State<vehicalDtail> {
             "state": stateTextEditingController.text.trim(),
             "city": cityTextEditingController.text.trim(),
             "colony": colonyTextEditingController.text.trim(),
+            "status":"0"
           };
-          databaseRef.child('vehicaldetail').child(DateTime.now().millisecond.toString()).set(vehicalMap);
+          databaseRef.child('vehicaldetail').child(vehicalnumberTextEditingController.text.trim()).set(vehicalMap);
           publicRef.child(DateTime.now().millisecond.toString()).set(publiclMap);
 
         }
